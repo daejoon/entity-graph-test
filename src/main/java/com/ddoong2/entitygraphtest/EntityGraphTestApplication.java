@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +18,7 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 @RestController
-public class EntityGraphTestApplication implements CommandLineRunner {
+public class EntityGraphTestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EntityGraphTestApplication.class, args);
@@ -25,36 +28,43 @@ public class EntityGraphTestApplication implements CommandLineRunner {
     private CustomerRepository customerRepository;
     @Autowired
     private MyGroupRepository myGroupRepository;
+    @Autowired
+    private Environment environment;
 
-    @Override
-    public void run(String... args) throws Exception {
-        MyGroup myTeam = MyGroup.builder()
-                .name("MyTeam")
-                .build();
 
-        myTeam = myGroupRepository.save(myTeam);
+    @Profile("!test")
+    @Bean
+    public CommandLineRunner runner() {
+        return args -> {
+            MyGroup myTeam = MyGroup.builder()
+                    .name("MyTeam")
+                    .build();
 
-        Customer andew = Customer.builder()
-                .firstName("Andew")
-                .lastName("Hong")
-                .myGroup(myTeam)
-                .build();
-        customerRepository.save(andew);
+            myTeam = myGroupRepository.save(myTeam);
 
-        Customer brandon = Customer.builder()
-                .firstName("Brandon")
-                .lastName("Kim")
-                .myGroup(myTeam)
-                .build();
-        customerRepository.save(brandon);
+            Customer andew = Customer.builder()
+                    .firstName("Andew")
+                    .lastName("Hong")
+                    .myGroup(myTeam)
+                    .build();
+            customerRepository.save(andew);
 
-        Customer charles = Customer.builder()
-                .firstName("Charles")
-                .lastName("Kim")
-                .myGroup(myTeam)
-                .build();
-        customerRepository.save(charles);
+            Customer brandon = Customer.builder()
+                    .firstName("Brandon")
+                    .lastName("Kim")
+                    .myGroup(myTeam)
+                    .build();
+            customerRepository.save(brandon);
+
+            Customer charles = Customer.builder()
+                    .firstName("Charles")
+                    .lastName("Kim")
+                    .myGroup(myTeam)
+                    .build();
+            customerRepository.save(charles);
+        };
     }
+
 
     @GetMapping("/customers")
     public ResponseEntity customer() {

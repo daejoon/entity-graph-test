@@ -1,16 +1,13 @@
 package com.ddoong2.entitygraphtest.hello;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Getter @ToString
+@Getter @ToString @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
 public class MyGroup {
