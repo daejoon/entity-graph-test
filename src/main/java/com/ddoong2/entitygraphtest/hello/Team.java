@@ -10,7 +10,7 @@ import javax.persistence.Id;
 @Getter @ToString @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
-public class MyGroup {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +18,7 @@ public class MyGroup {
     private String name;
 
     @Builder
-    public MyGroup(String name) {
+    public Team(String name) {
         this.name = name;
     }
 }

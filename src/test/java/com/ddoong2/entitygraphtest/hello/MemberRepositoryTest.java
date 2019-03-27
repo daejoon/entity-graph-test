@@ -15,80 +15,80 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @DataJpaTest
-public class CustomerRepositoryTest {
+public class MemberRepositoryTest {
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private TestEntityManager entityManager;
     @Autowired
-    private CustomerRepository customerRepository;
+    private MemberRepository memberRepository;
 
     @Test
-    public void test_customer_lastname_으로_조회한다() {
-        MyGroup myTeam = MyGroup.builder()
+    public void test_member를_lastname_으로_조회한다() {
+        Team myTeam = Team.builder()
                 .name("MyTeam")
                 .build();
-        myTeam = testEntityManager.persist(myTeam);
+        myTeam = entityManager.persist(myTeam);
 
-        Customer andew = Customer.builder()
+        Member andew = Member.builder()
                 .firstName("Andew")
                 .lastName("Hong")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        andew = testEntityManager.persist(andew);
+        andew = entityManager.persist(andew);
 
-        Customer brandon = Customer.builder()
+        Member brandon = Member.builder()
                 .firstName("Brandon")
                 .lastName("Kim")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        brandon = testEntityManager.persist(brandon);
+        brandon = entityManager.persist(brandon);
 
-        Customer charles = Customer.builder()
+        Member charles = Member.builder()
                 .firstName("Charles")
                 .lastName("Kim")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        charles = testEntityManager.persist(charles);
+        charles = entityManager.persist(charles);
 
-        List<Customer> customerList = customerRepository.findByLastName("Kim");
+        List<Member> memberList = memberRepository.findByLastName("Kim");
 
-        assertThat(customerList)
+        assertThat(memberList)
                 .isNotEmpty()
                 .hasSize(2)
                 .contains(brandon, charles);
     }
 
     @Test
-    public void test_customer를_조회하는데_mygroup을_eager_조회한다() {
-        MyGroup myTeam = MyGroup.builder()
+    public void test_member를_조회하는데_team도_같이_조회한다() {
+        Team myTeam = Team.builder()
                 .name("MyTeam")
                 .build();
-        myTeam = testEntityManager.persist(myTeam);
+        myTeam = entityManager.persist(myTeam);
 
-        Customer andew = Customer.builder()
+        Member andew = Member.builder()
                 .firstName("Andew")
                 .lastName("Hong")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        testEntityManager.persist(andew);
+        entityManager.persist(andew);
 
-        Customer brandon = Customer.builder()
+        Member brandon = Member.builder()
                 .firstName("Brandon")
                 .lastName("Kim")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        testEntityManager.persist(brandon);
+        entityManager.persist(brandon);
 
-        Customer charles = Customer.builder()
+        Member charles = Member.builder()
                 .firstName("Charles")
                 .lastName("Kim")
-                .myGroup(myTeam)
+                .team(myTeam)
                 .build();
-        testEntityManager.persist(charles);
+        entityManager.persist(charles);
 
-        List<Customer> customerList = customerRepository.findByLastNameOrderById("Kim");
+        List<Member> memberList = memberRepository.findByLastNameOrderById("Kim");
 
-        assertThat(customerList)
+        assertThat(memberList)
                 .isNotEmpty()
                 .hasSize(2)
                 .contains(brandon, charles);

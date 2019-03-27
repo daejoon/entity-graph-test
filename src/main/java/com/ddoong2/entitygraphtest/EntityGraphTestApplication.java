@@ -8,7 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,67 +24,65 @@ public class EntityGraphTestApplication {
     }
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    private MyGroupRepository myGroupRepository;
-    @Autowired
-    private Environment environment;
+    private TeamRepository teamRepository;
 
 
     @Profile("!test")
     @Bean
     public CommandLineRunner runner() {
         return args -> {
-            MyGroup myTeam = MyGroup.builder()
+            Team myTeam = Team.builder()
                     .name("MyTeam")
                     .build();
 
-            myTeam = myGroupRepository.save(myTeam);
+            myTeam = teamRepository.save(myTeam);
 
-            Customer andew = Customer.builder()
+            Member andew = Member.builder()
                     .firstName("Andew")
                     .lastName("Hong")
-                    .myGroup(myTeam)
+                    .team(myTeam)
                     .build();
-            customerRepository.save(andew);
+            memberRepository.save(andew);
 
-            Customer brandon = Customer.builder()
+            Member brandon = Member.builder()
                     .firstName("Brandon")
                     .lastName("Kim")
-                    .myGroup(myTeam)
+                    .team(myTeam)
                     .build();
-            customerRepository.save(brandon);
+            memberRepository.save(brandon);
 
-            Customer charles = Customer.builder()
+            Member charles = Member.builder()
                     .firstName("Charles")
                     .lastName("Kim")
-                    .myGroup(myTeam)
+                    .team(myTeam)
                     .build();
-            customerRepository.save(charles);
+            memberRepository.save(charles);
         };
     }
 
 
-    @GetMapping("/customers")
-    public ResponseEntity customer() {
+    @GetMapping("/members")
+    public ResponseEntity members() {
         ModelMapper modelMapper = new ModelMapper();
 
-        List<Customer> customerList = customerRepository.findByLastName("Kim");
+        List<Member> memberList = memberRepository.findByLastName("Kim");
         return ResponseEntity.ok(
-                customerList.stream()
-                        .map(customer -> modelMapper.map(customer, CustomerDto.class))
+                memberList.stream()
+                        .map(member -> modelMapper.map(member, MemberDto.class))
                         .collect(Collectors.toList())
         );
     }
 
-    @GetMapping("/customers-with-team")
-    public ResponseEntity customerWithTeam() {
+    @GetMapping("/members-with-team")
+    public ResponseEntity membersWithTeam() {
         ModelMapper modelMapper = new ModelMapper();
 
-        List<Customer> customerList = customerRepository.findByLastNameOrderById("Kim");
+        List<Member> memberList = memberRepository.findByLastNameOrderById("Kim");
         return ResponseEntity.ok(
-                customerList.stream()
-                        .map(customer -> modelMapper.map(customer, CustomerWithTeamDto.class))
+                memberList.stream()
+                        .map(member -> modelMapper.map(member, MemberWithTeamDto.class))
                         .collect(Collectors.toList())
         );
     }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Getter @ToString @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
-public class Customer {
+public class Member {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -15,12 +15,12 @@ public class Customer {
     private String lastName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private MyGroup myGroup;
+    private Team team;
 
     @Builder
-    public Customer(String firstName, String lastName, MyGroup myGroup) {
+    public Member(String firstName, String lastName, Team team) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.myGroup = myGroup;
+        this.team = team;
     }
 }

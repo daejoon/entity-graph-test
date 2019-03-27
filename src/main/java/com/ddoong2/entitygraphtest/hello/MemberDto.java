@@ -6,9 +6,8 @@ import lombok.ToString;
 
 @Getter @Setter
 @ToString
-public class CustomerWithTeamDto {
+public class MemberDto {
     private Long id;
     private String firstName;
     private String lastName;
-    private String myGroupName;
 }
