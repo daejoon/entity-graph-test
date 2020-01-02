@@ -1,31 +1,34 @@
-plugins {
-    id 'org.springframework.boot' version '2.1.4.RELEASE'
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.2.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.ddoong2'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    implementation 'org.modelmapper:modelmapper:2.3.0'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('org.modelmapper:modelmapper:2.3.0')
+    compileOnly('org.projectlombok:lombok')
+    compile('org.springframework.boot:spring-boot-devtools')
+    runtimeOnly('com.h2database:h2')
+    annotationProcessor('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
