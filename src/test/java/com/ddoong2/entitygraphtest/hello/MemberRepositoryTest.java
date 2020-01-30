@@ -1,11 +1,12 @@
 package com.ddoong2.entitygraphtest.hello;
 
+import org.hibernate.Hibernate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -13,84 +14,59 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
 @DataJpaTest
 public class MemberRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
+    private TestEntityManager em;
     @Autowired
     private MemberRepository memberRepository;
 
-    @Test
-    public void test_member를_lastname_으로_조회한다() {
-        Team myTeam = Team.builder()
+    @Before
+    public void setUp() throws Exception {
+        Team team = Team.builder()
                 .name("MyTeam")
                 .build();
-        myTeam = entityManager.persist(myTeam);
+        em.persist(team);
 
         Member andew = Member.builder()
                 .firstName("Andew")
                 .lastName("Hong")
-                .team(myTeam)
+                .team(team)
                 .build();
-        andew = entityManager.persist(andew);
+        em.persist(andew);
 
         Member brandon = Member.builder()
                 .firstName("Brandon")
                 .lastName("Kim")
-                .team(myTeam)
+                .team(team)
                 .build();
-        brandon = entityManager.persist(brandon);
+        em.persist(brandon);
 
         Member charles = Member.builder()
                 .firstName("Charles")
                 .lastName("Kim")
-                .team(myTeam)
+                .team(team)
                 .build();
-        charles = entityManager.persist(charles);
+        em.persist(charles);
 
+        em.flush();
+        em.clear();
+    }
+
+    @Test
+    public void test_member를_lastname_으로_조회한다() {
         List<Member> memberList = memberRepository.findByLastName("Kim");
 
         assertThat(memberList)
                 .isNotEmpty()
-                .hasSize(2)
-                .contains(brandon, charles);
+                .hasSize(2);
     }
 
     @Test
     public void test_member를_조회하는데_team도_같이_조회한다() {
-        Team myTeam = Team.builder()
-                .name("MyTeam")
-                .build();
-        myTeam = entityManager.persist(myTeam);
+        List<Member> members = memberRepository.findByLastNameOrderById("Kim");
 
-        Member andew = Member.builder()
-                .firstName("Andew")
-                .lastName("Hong")
-                .team(myTeam)
-                .build();
-        entityManager.persist(andew);
-
-        Member brandon = Member.builder()
-                .firstName("Brandon")
-                .lastName("Kim")
-                .team(myTeam)
-                .build();
-        entityManager.persist(brandon);
-
-        Member charles = Member.builder()
-                .firstName("Charles")
-                .lastName("Kim")
-                .team(myTeam)
-                .build();
-        entityManager.persist(charles);
-
-        List<Member> memberList = memberRepository.findByLastNameOrderById("Kim");
-
-        assertThat(memberList)
-                .isNotEmpty()
-                .hasSize(2)
-                .contains(brandon, charles);
+        assertThat(Hibernate.isInitialized(members.get(0).getTeam())).isEqualTo(true);
     }
 }

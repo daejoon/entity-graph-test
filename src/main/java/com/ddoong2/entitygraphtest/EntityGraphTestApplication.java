@@ -28,8 +28,7 @@ public class EntityGraphTestApplication {
     @Autowired
     private TeamRepository teamRepository;
 
-
-    @Profile("!test")
+    @Profile("data")
     @Bean
     public CommandLineRunner runner() {
         return args -> {
