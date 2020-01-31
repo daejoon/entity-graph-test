@@ -64,7 +64,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    public void test_member를_조회하는데_team도_같이_조회한다() {
+    public void test_member를_lastname으로_조회하는데_team도_같이_조회한다() {
         List<Member> members = memberRepository.findByLastNameOrderById("Kim");
 
         assertThat(Hibernate.isInitialized(members.get(0).getTeam())).isEqualTo(true);
