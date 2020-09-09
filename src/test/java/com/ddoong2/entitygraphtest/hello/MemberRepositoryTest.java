@@ -1,19 +1,17 @@
 package com.ddoong2.entitygraphtest.hello;
 
 import org.hibernate.Hibernate;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class MemberRepositoryTest {
 
@@ -22,8 +20,8 @@ public class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void init() {
         Team team = Team.builder()
                 .name("MyTeam")
                 .build();
@@ -55,7 +53,8 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    public void test_member를_lastname_으로_조회한다() {
+    @DisplayName("test member를 lastname으로 조회한다")
+    void test_member를_lastname으로_조회한다() throws Exception {
         List<Member> memberList = memberRepository.findByLastName("Kim");
 
         assertThat(memberList)
@@ -64,7 +63,8 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    public void test_member를_lastname으로_조회하는데_team도_같이_조회한다() {
+    @DisplayName("test member를 lastname으로 조회하는데 team도 같이 조회한다")
+    void test_member를_lastname으로_조회하는데_team도_같이_조회한다() throws Exception {
         List<Member> members = memberRepository.findByLastNameOrderById("Kim");
 
         assertThat(Hibernate.isInitialized(members.get(0).getTeam())).isEqualTo(true);
